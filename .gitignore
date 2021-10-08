@@ -1,0 +1,15 @@
+# Object files
+*.o
+
+# Executables
+stack
+
+# Logs
+log.html
+
+# Input / output
+input.txt
+out.txt
+
+# Doxygen generated
+#/docs/compiled

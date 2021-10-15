@@ -1,16 +1,14 @@
 /**
  * @file
- * @brief Assembly asm_code parser
+ * @brief Parser utils
  * @author d3phys
- * @date 08.10.2021
+ * @date 15.10.2021
  */
 
 #ifndef PARSE_H_
 #define PARSE_H_
 
 #include <sys/mman.h>
-
-const size_t CMD_TOKENS = 0x0004;
 
 struct token_t {
         char *start = nullptr;

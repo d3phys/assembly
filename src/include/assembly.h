@@ -6,14 +6,16 @@
 const char DLM_COMMENTS[] = ";";
 const char DLM_TOKS[]     = " \t";
 const char DLM_CMDS[]     = "\n";
-
-#define MNEMONIC(MNEM)                                          \
-        const int  MNEM = murmur_hash(#MNEM, sizeof(#MNEM), 0);  \
-        const char M_##MNEM[] = #MNEM;\
+/*
+#define NAMEONIC(NAME)                                                \
+        const int  HASH##NAME = murmur_hash(#NAME, sizeof(#NAME), 0); \
+        const char M_##NAME[] = #NAME;                                \
+        const int  OPCODE_##NAME = #NAME;                           \
 
 MNEMONIC(PUSH)
 MNEMONIC(POP)
 MNEMONIC(SUB)
 MNEMONIC(MUL)
+*/
 
 #endif /* ASSEMBLY_H_ */

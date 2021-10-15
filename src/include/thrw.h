@@ -1,5 +1,6 @@
 #ifndef THRW_H_
 #define THRW_H_
+#include <stdio.h>
 
 #define thrw(to, condition, fmt, ...)                                    \
         do {                                                             \

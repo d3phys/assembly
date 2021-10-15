@@ -12,12 +12,8 @@
 #include "include/thrw.h"
 
 
-static off_t get_size(const char *const file);
-static size_t occurs(const char ch, const char *const buffer);
 static inline int among(const char ch, const char *str);
 
-static char *strtik(char *str, const char *const delim, 
-                               size_t *const length = nullptr);
 
 size_t extract_tokens(char *const buf, token_t *tokens, 
                      const char *const delim, size_t n_tokens) 
@@ -41,40 +37,6 @@ size_t extract_tokens(char *const buf, token_t *tokens,
         return n_wds;
 }
 
-int construct_asm_code(asm_code_t *const asm_code, char *const buf)
-{
-        assert(asm_code);
-        assert(buf);
-
-        errno = 0;
-
-        size_t n_toks = 0;
-        size_t n_cmds = occurs('\n', buf);
-
-        token_t  *cmds = (token_t *)calloc(n_cmds, sizeof(token_t));
-        thrw(finally, (cmds == nullptr),
-             "Can't calloc memory for commands: %s", strerror(errno));
-
-        n_toks = extract_tokens(buf, cmds, "\n", n_cmds);
-        if (n_toks < n_cmds) {
-                n_cmds = n_toks;
-                void *mem = realloc(cmds, sizeof(token_t) * n_cmds);
-                thrw(finally, (mem == nullptr),
-                     "Can't realloc memory for commands: %s", 
-                                                     strerror(errno));
-
-                cmds = (token_t *)mem;
-        }
-
-        asm_code->  cmds =   cmds;
-        asm_code->n_cmds = n_cmds;
-
-finally:
-        if (errno)
-                free(cmds);
-
-        return errno;
-}
 
 int save(const char *const file,
          const char *const buf, size_t n_bytes)
@@ -140,7 +102,7 @@ finally:
         return errno;
 }
 
-static off_t get_size(const char *const file) 
+off_t get_size(const char *const file) 
 {
         assert(file);
         errno = 0;
@@ -153,7 +115,7 @@ static off_t get_size(const char *const file)
         return buf.st_size;
 }
 
-static size_t occurs(const char ch, const char *const str) 
+size_t occurs(const char ch, const char *const str) 
 {
         assert(str);
 
@@ -177,12 +139,9 @@ static inline int among(const char ch, const char *str)
 
 #define skip(tok, condition)                            \
         do {                                            \
-                while (condition) {                     \
-                        if (*(++tok) == '\0') {         \
-                                tok = nullptr;          \
+                while (condition)                       \
+                        if (*(++tok) == '\0')           \
                                 break;                  \
-                        }                               \
-                }                                       \
                                                         \
         } while (0)
 
@@ -196,7 +155,7 @@ static inline int among(const char ch, const char *str)
  * This function is designed to be called multiple times 
  * to obtain successive tokens from the same string.
  */
-static char *strtik(char *str, const char *const delim, size_t *const len)
+char *strtik(char *str, const char *const delim, size_t *const len)
 {
         assert(delim);
 
@@ -208,20 +167,21 @@ static char *strtik(char *str, const char *const delim, size_t *const len)
 
         if (tok) {
                 skip(tok, among(*tok, delim));
-                if (tok == nullptr)
+                if (*tok == '\0') {
+                        tok = nullptr;
                         return start;
+                }
 
                 start = tok;
 
                 skip(tok, !among(*tok, delim));
-                if (tok == nullptr) {
-                        if (len)
-                                *len = strlen(start);
-                        return start;
-                }
-                
                 if (len)
                         *len = tok - start;
+
+                if (*tok == '\0') {
+                        tok = nullptr;
+                        return start;
+                }
 
                 *tok++ = '\0';
         }

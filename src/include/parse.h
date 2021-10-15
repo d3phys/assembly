@@ -17,28 +17,16 @@ struct token_t {
         size_t len  = 0;
 };
 
-struct command_t {
-        token_t tokens[CMD_TOKENS] = {0};
-        size_t n_tokens = 0;
-};
-
-struct asm_code_t {
-        token_t *cmds = nullptr;
-        size_t n_cmds = 0;
-};
-
 size_t extract_tokens(char *const buf, token_t *tokens, 
                       const char *const delim, size_t n_tokens);
 
-int construct_asm_code(asm_code_t *const asm_code, char *const buf);
-int destruct_asm_code (asm_code_t *const asm_code);
+size_t occurs(const char ch, const char *const buffer);
+off_t get_size(const char *const file);
+char *strtik(char *str, const char *const delim, size_t *const len = nullptr);
 
 int save(const char *const file,
          const char *const buf, size_t n_bytes);
 
-/**
- * @brief Reads file to a buffer
- */
 int bufferise(const char *const file, 
               char **const buf, size_t *const size = nullptr);
 

@@ -1,16 +1,12 @@
 # Object files
 *.o
 
-# Executables
-asm
-
-# Logs
+#Build
+build
 test
-log.html
 
-# Input / output
-input.txt
-out.txt
+#ctags file
+tags
 
 # Doxygen generated
 #/docs/compiled

@@ -8,8 +8,8 @@
 #include <errno.h>
 #include <assert.h>
 #include <stdlib.h>
-#include "include/parse.h"
-#include "include/thrw.h"
+#include "parse.h"
+#include <thrw.h>
 
 
 static inline int among(const char ch, const char *str);

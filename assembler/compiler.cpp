@@ -3,9 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "include/parse.h"
-#include "include/compiler.h"
-#include "include/thrw.h"
+#include "parse.h"
+#include "compiler.h"
+#include <thrw.h>
 
 static inline int islabel(const token_t *const tok)
 {
@@ -35,9 +35,6 @@ int compile_asm(code_t *asm_code, char *const bytecode)
         size_t n_toks = 0;
         for (size_t c = 0; c < asm_code->n_cmds; c++) {
                 uncomment(&asm_code->cmds[c]);
-                printf("Address: %ld | %ld (len: %ld): %s\n", 
-                                (size_t)asm_code->cmds[c].start, c, asm_code->cmds[c].len, asm_code->cmds[c].start);
-
                 n_toks = extract_tokens(asm_code->cmds[c].start, toks, " \t,", 4);
 
                 for (size_t t = 0; t < n_toks; t++) {
@@ -45,8 +42,6 @@ int compile_asm(code_t *asm_code, char *const bytecode)
                        if (val) {
 
                        }
-                       printf("%s ", toks[t].start);
-                       //printf("(%ld) TOKEN (%ld): %s\n", t, toks[t].len, toks[t].start);
                 }
         }
 

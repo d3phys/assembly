@@ -1,4 +1,4 @@
-#include "include/hash.h"
+#include "hash.h"
 
 unsigned int murmur_hash(const void *const key, int len, unsigned int seed)
 {

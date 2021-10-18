@@ -2,8 +2,13 @@
 # 16.10.2021
 
 SUBDIRS := 
-SOURCE  := $(wildcard *.cpp)
 BINARY  := binary
+
+ifeq ($(MAKELEVEL), 0)
+SOURCE  := $(wildcard *.cpp) $(wildcard test/*.cpp)#$(subst test/,, $(wildcard test/*.cpp))
+else
+SOURCE  := $(wildcard *.cpp)
+endif
 
 ifeq ($(MAKELEVEL), 0)
 BUILD_DIR := build
@@ -20,16 +25,17 @@ make: mkdir dependences $(OBJECTS)
 		$(MAKE) -C $$dir ;  \
 	done
 ifeq ($(MAKELEVEL), 0)
-	$(CXX) -o $(BUILD_DIR)/$(BINARY) $(wildcard $(BUILD_DIR)/*.o)
+	$(CXX) -o $(BUILD_DIR)/$(BINARY) $(wildcard $(BUILD_DIR)/*.o) $(wildcard $(BUILD_DIR)/test/*.o)
 endif
 
 mkdir:
 ifeq ($(MAKELEVEL), 0)
 	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)/test
 endif
 
 $(BUILD_DIR)/%.o: %.cpp 
-	    $(CXX) -c -o $@ $<
+	    $(CXX) -I../include -c -o $@ $<
 
 .PHONY: clean
 clean:

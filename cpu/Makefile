@@ -1,21 +1,13 @@
 # Important! Dependencies are done automatically by 'make dep', which also
 # removes any old dependencies. Do not modify it...
+OBJS = cpu.o
 
-CXX = g++
-CXXFLAGS = -Wall 
-CPP = $(CXX) -E 
+SUBDIRS = stack
 
-OBJS = main.o
+INC = ../include
 
-SUBDIRS = cpu assembler
-MODULES = cpu/processor.o cpu/stack/astack.o assembler/assembler.o
-
-INC = include
-
-.EXPORT_ALL_VARIABLES: CXX CXXFLAGS CPP
-
-whole.o: $(OBJS) subdirs
-	$(LD) -r -o $@ $(OBJS) $(MODULES)
+processor.o: $(OBJS) subdirs
+	$(LD) -r -o $@ $(OBJS)
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c -I$(INC) $< -o $@
@@ -28,13 +20,14 @@ dep:
 	@sed '/\#\#\# Dependencies \#\#\#/q' < Makefile > temp_make
 	@$(CPP) -M *.cpp -I$(INC) >> temp_make
 	@cp temp_make Makefile
+	@rm temp_make 
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) dep) || exit; done
 
 subdirs:
-	for i in $(SUBDIRS); do (cd $$i && echo $$i && $(MAKE)) || exit; done
+	@for i in $(SUBDIRS); do (cd $$i && echo $$i && $(MAKE)) || exit; done
 
 ### Dependencies ###
-main.o: main.cpp /usr/include/stdc-predef.h /usr/include/stdio.h \
+cpu.o: cpu.cpp /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/bits/libc-header-start.h /usr/include/features.h \
  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
  /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
@@ -48,13 +41,8 @@ main.o: main.cpp /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
  /usr/include/bits/types/cookie_io_functions_t.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/floatn.h \
- /usr/include/bits/floatn-common.h /usr/include/sys/mman.h \
- /usr/include/bits/mman.h /usr/include/bits/mman-map-flags-generic.h \
- /usr/include/bits/mman-linux.h /usr/include/bits/mman-shared.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/bits/getopt_posix.h /usr/include/bits/getopt_core.h \
- /usr/include/bits/unistd_ext.h /usr/include/c++/11.1.0/stdlib.h \
+ /usr/include/bits/floatn-common.h cpu.h ../include/thrw.h \
+ ../include/assembly.h ../include/hash.h /usr/include/c++/11.1.0/stdlib.h \
  /usr/include/c++/11.1.0/cstdlib \
  /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++config.h \
  /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/os_defines.h \
@@ -75,4 +63,11 @@ main.o: main.cpp /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/bits/pthreadtypes.h /usr/include/bits/thread-shared-types.h \
  /usr/include/bits/pthreadtypes-arch.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-float.h /usr/include/c++/11.1.0/bits/std_abs.h
+ /usr/include/bits/stdlib-float.h /usr/include/c++/11.1.0/bits/std_abs.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h \
+ /usr/include/bits/stdint-uintn.h ../assembler/compiler.h \
+ ../assembler/parse.h /usr/include/sys/mman.h /usr/include/bits/mman.h \
+ /usr/include/bits/mman-map-flags-generic.h \
+ /usr/include/bits/mman-linux.h /usr/include/bits/mman-shared.h \
+ stack/stack.h ../include/config.h

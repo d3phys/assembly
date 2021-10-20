@@ -5,7 +5,7 @@
 
 #include "parse.h"
 #include "compiler.h"
-#include <thrw.h>
+#include "../include/thrw.h"
 
 static inline int islabel(const token_t *const tok)
 {
@@ -14,11 +14,11 @@ static inline int islabel(const token_t *const tok)
 
 static void uncomment(token_t *tok)
 {
-        char   *ch = tok->start;
+        char *ch = tok->start;
         size_t len = tok->len;
         while (len-- > 0) {
                 if (*ch == ';') {
-                        tok->len = ch - tok->start;
+                        tok->len = (size_t)(ch - tok->start);
                         *ch = '\0';
                         return;
                 }
@@ -31,17 +31,14 @@ int compile_asm(code_t *asm_code, char *const bytecode)
         assert(asm_code);
         static token_t toks[4] = {0};
 
-        char *end = nullptr;
+        //char *end = nullptr;
         size_t n_toks = 0;
         for (size_t c = 0; c < asm_code->n_cmds; c++) {
                 uncomment(&asm_code->cmds[c]);
                 n_toks = extract_tokens(asm_code->cmds[c].start, toks, " \t,", 4);
 
                 for (size_t t = 0; t < n_toks; t++) {
-                       double val = atof(toks[t].start);
-                       if (val) {
-
-                       }
+                //       double val = atof(toks[t].start);
                 }
         }
 

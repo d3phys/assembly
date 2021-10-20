@@ -56,7 +56,7 @@ int save(const char *const file,
 
         n_written = write(fd, buf, n_bytes);
         thrw(finally, (n_written != n_bytes),
-             "Error while writing. Buffer length: %ld, bytes written: %ld", 
+             "Error while writing. Buffer length: %lu, bytes written: %lu", 
                                                        n_bytes, n_written);
 
 finally:

@@ -2,12 +2,12 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include "include/parse.h"
-#include "include/compiler.h"
+//#include "include/parse.h"
+//#include "include/compiler.h"
 
 int main() 
 {
-        //printf("Page size: %d\n", getpagesize());
+/*        //printf("Page size: %d\n", getpagesize());
         printf("SIZE: %ld\n\n", sizeof("PUSH"));
         char *buf = nullptr;
         size_t n_bytes = 0;
@@ -24,6 +24,7 @@ int main()
         printf("\n\n\n\n");
         compile_asm(&code, buf);
         free(code.cmds);
+        */
 /*
         char *tok = buf;
         tok = strtik(tok, "\n");
@@ -43,8 +44,9 @@ int main()
         tok = strtik(nullptr, "\n");
         printf("Strtok: %s\n", tok);
         */
-
+/*
         int a = munmap(buf, n_bytes);
+        */
 
         return 0;
 }

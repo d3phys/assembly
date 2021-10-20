@@ -9,7 +9,7 @@ struct code_t {
 };
 
 struct header_t {
-        unsigned int sign = 12321;
+        unsigned int signature = 0x4441444;
         unsigned int version = 1;
         size_t n_cmds = 0;
 };

@@ -7,6 +7,7 @@
 
 #ifndef HASH_H_
 #define HASH_H_
+#include <stdlib.h>
 
 /**
  * @brief Murmur2 algorithm hash function.
@@ -27,7 +28,7 @@
  * 2. It will not produce the same results on little-endian and big-endian
  *    machines
  */
-unsigned int murmur_hash(const void *const key, int length, unsigned int seed);
+unsigned int murmur_hash(const void *key, size_t length, unsigned int seed);
 
 #endif /* HASH_H_ */
 

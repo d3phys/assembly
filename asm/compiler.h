@@ -1,6 +1,7 @@
 #ifndef COMPILER_H_
 #define COMPILER_H_
 
+#include <stdio.h>
 #include "parse.h"
 
 struct code_t {
@@ -20,6 +21,7 @@ struct asm_compiler_t {
         char  *bytecode = {0};
 };
 
+int preprocess_asm(code_t *asm_code, FILE *const out);
 int compile_asm(code_t *asm_code, char *const bytecode);
 int decompile_asm(char *bytecode);
 

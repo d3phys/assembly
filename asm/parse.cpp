@@ -86,8 +86,7 @@ finally:
         return errno;
 }
 
-int bufferise(const char *const file, 
-              char **const buf, size_t *const size)
+int fmap(const char *const file, char **const buf, size_t *const size)
 {
         assert(file);
         errno = 0;
@@ -99,11 +98,12 @@ int bufferise(const char *const file,
         off_t fsz = get_size(file);
         thrw(finally, (fsz == -1), 
             "Can't get the file size %s\n", strerror(errno));
+        thrw(finally, (fsz == 0), 
+            "File is empty: %s\n", file); 
 
-        fd = open(file, O_RDONLY); 
+        fd = open(file, O_RDWR); 
         thrw(finally, (fd < 0), 
             "Can't open the file %s: %s\n", file, strerror(errno));
-
 
         bf = (char *)mmap(nullptr, fsz + 1, prot, MAP_PRIVATE, fd, 0);
         thrw(finally, (buf == MAP_FAILED), 

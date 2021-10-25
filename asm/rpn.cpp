@@ -32,9 +32,6 @@ static inline char check(stack_t *const stk)
 static int priority(const char op)
 {
         switch (op) {
-        case '(':
-                return 16;
-
         case '^':
                 return 4;
 
@@ -46,7 +43,10 @@ static int priority(const char op)
         case '+':
                 return 1;
 
+        case ']':
         case ')':
+        case '(':
+        case '[':
                 return 0;
 
         default:
@@ -69,29 +69,36 @@ int reverse_notation(const char *infix, char *postfix)
                 case '\t':
                         break;
 
+                case '[':
                 case '(':
+                        *postfix++ = ' ';
+                        push(&stk, *infix);
+                        break;
+
+                case ']':
+                        while (check(&stk) != '[')
+                                *postfix++ = pop(&stk);
+                        pop(&stk);
+                        break;
+
                 case ')':
+                        while (check(&stk) != '(')
+                                *postfix++ = pop(&stk);
+                        pop(&stk);
+                        break;
+
                 case '^':
                 case '*':
                 case '/':
                 case '-':
                 case '+':
-                        while (check(&stk) != '(' && 
+                        while (stk.size > 0 && 
                                priority(*infix) <= priority(check(&stk))) 
                         {
                                 *postfix++ = pop(&stk);
-                                if (stk.size == 0)
-                                        break;
                         }
 
-                        if (*infix == ')') {
-                                pop(&stk);
-                                break;
-                        }
-
-                        if (*infix != '(')
-                                *postfix++ = ' ';
-
+                        *postfix++ = ' ';
                         push(&stk, *infix);
                         break;
 

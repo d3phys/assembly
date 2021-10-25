@@ -12,13 +12,6 @@
 
 typedef char * token_t;
 
-/*
-struct token_t {
-        char *start = nullptr;
-//        size_t len  = 0;
-};
-*/
-
 int reverse_notation(const char *infix, char *postfix);
 
 size_t extract_tokens(char *const buf, token_t *tokens, 
@@ -31,8 +24,7 @@ char *strtik(char *str, const char *const delim, size_t *const len = nullptr);
 int save(const char *const file,
          const char *const buf, size_t n_bytes);
 
-int bufferise(const char *const file, 
-              char **const buf, size_t *const size = nullptr);
+int fmap(const char *const file, char **const buf, size_t *const size);
 
 #endif /* PARSE_H_ */
 

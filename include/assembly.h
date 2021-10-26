@@ -1,24 +1,49 @@
 #ifndef ASSEMBLY_H_
 #define ASSEMBLY_H_
 
-#include <hash.h>
 #include <stdint.h>
 
-const int VERSION = 1;
-enum commands {
-        CMD_PUSH = 0x0001,
-        CMD_POP  = 0x0002,
-        CMD_ADD  = 0x0003,
-        CMD_SUB  = 0x0004,
-};
+const unsigned int SEED = 0xDED64;
 
-const int32_t SEED = 0xDED64;
+typedef uint64_t arg_t;
+typedef uint16_t cmd_t;
+typedef uint8_t opcode_t;
 
-const uint32_t HASH_PUSH = murmur_hash("push", sizeof("push"), SEED);
-const uint32_t HASH_POP  = murmur_hash("pop",  sizeof("pop"),  SEED);
-const uint32_t HASH_SUB  = murmur_hash("sub",  sizeof("sub"),  SEED);
-const uint32_t HASH_ADD  = murmur_hash("add",  sizeof("add"),  SEED);
+const uint16_t MSB = ~((cmd_t)(~0x00) >> 0x01);
 
-#define CMD(code, mnem, n_args)
+const cmd_t VAL_T = MSB >> 0x00;
+const cmd_t MEM_T = MSB >> 0x01;
+const cmd_t REG_T = MSB >> 0x02;
+
+#define CMD(name, opcode, mnemonic, hash)    \
+        const opcode_t name = opcode;        \
+        const char MN_##name[]   = mnemonic; \
+        const uint32_t HASH_##name   = hash; \
+
+#include <commands>
+
+#undef CMD
+
+#define REG(name, num, mnemonic, hash)     \
+        const arg_t name = num;            \
+        const char MN_##name[] = mnemonic; \
+
+#include <registers>
+
+#undef REG 
+
+/*
+#define ACTION(code, action)             \
+
+ACT(PSH | VAL_T, 
+{
+        pop;
+})
+
+ACT(PSH | REG_T, 
+{
+        pop;
+})
+*/
 
 #endif /* ASSEMBLY_H_ */

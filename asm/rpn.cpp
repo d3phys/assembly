@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <errno.h>
+#include <thrw.h>
 
 static const unsigned int STK_SIZE = 64;
 
@@ -72,18 +73,31 @@ int reverse_notation(const char *infix, char *postfix)
                 case '[':
                 case '(':
                         *postfix++ = ' ';
+                        thrw(error, (stk.size >= STK_SIZE), 
+                             "Reverse notation stack is full\n");
+
                         push(&stk, *infix);
                         break;
 
                 case ']':
-                        while (check(&stk) != '[')
+                        while (check(&stk) != '[') {
+                                thrw(error, (stk.size <= 1),
+                                     "Can't find open bracket ]\n");
+
                                 *postfix++ = pop(&stk);
+                        }
+
                         pop(&stk);
                         break;
 
                 case ')':
-                        while (check(&stk) != '(')
+                        while (check(&stk) != '(') {
+                                thrw(error, (stk.size <= 1),
+                                     "Can't find open bracket (\n");
+
                                 *postfix++ = pop(&stk);
+                        }
+
                         pop(&stk);
                         break;
 
@@ -99,7 +113,12 @@ int reverse_notation(const char *infix, char *postfix)
                         }
 
                         *postfix++ = ' ';
+
+                        thrw(error, (stk.size >= STK_SIZE), 
+                             "Reverse notation stack is full\n");
+
                         push(&stk, *infix);
+
                         break;
 
                 default:
@@ -116,132 +135,9 @@ int reverse_notation(const char *infix, char *postfix)
         *postfix = '\0';
         stk.size = 0;
         return 0;
+
+error:
+        return -1;
 }
 
-/*
-esip = sip;
-arg = strtod(sip, &esip);
-if (esip != sip)
-        printf("push %lf\n", arg);
-else {
-*/
-/*
-int main()
-{
-        // char x[] = "ax - cd           (bx- cx * (ax-  0x001)) *   - 3 * dx   ^ 2  + 32 ^ 3";
-        char x[] = "(dx- 0x032) / 0x02 +ax * (32 - 21)  - cx";
 
-        //char x[] = "0x0032 + 32";
-        char d[100] = {0};
-        int err = reverse_notation(x, d);
-        printf("ERROR: %d\n", err);
-        printf("%s\n", x);
-        printf("%s\n", d);
-
-        printf("arr: %p\n", d);
-        char *p = d;
-        printf("end: %p\n", p);
-        double a = strtod(d, &p);
-        printf("end: %p\n", p);
-        printf("endch: %c\n", *p);
-        if (p == d)
-                printf("Error \n");
-
-        printf("num: %lf\nerrno: %d\n", a, errno);
-
-
-        double arg = 0;
-        int no = 0;
-        char *sip = d;
-        char *ip = d;
-        char *esip = sip;
-
-        while (*ip != '\0') {
-                //printf("%c\n", *ip);
-                switch (*ip) {
-                case ' ':
-                        if (sip != ip) {
-                                esip = sip;
-                                arg = strtod(sip, &esip);
-                                if (esip != sip)
-                                        printf("push %lf\n", arg);
-                                else {
-                                        *(ip-1) = '\0';
-                                        printf("push %s\n", sip);
-                                }
-                        }
-                        sip = ip + 1;
-                        break;
-
-                case '-':
-                        if (sip != ip) {
-                                esip = sip;
-                                arg = strtod(sip, &esip);
-                                if (esip != sip)
-                                        printf("push %lf\n", arg);
-                                else {
-                                        *(ip-1) = '\0';
-                                        printf("push %s\n", sip);
-                                }
-                        }
-                        sip = ip + 1;
-                        printf("sub\n");
-                        break;
-
-                case '+':
-                        if (sip != ip) {
-                                esip = sip;
-                                arg = strtod(sip, &esip);
-                                if (esip != sip)
-                                        printf("push %lf\n", arg);
-                                else {
-                                        *(ip-1) = '\0';
-                                        printf("push %s\n", sip);
-                                }
-                        }
-                        sip = ip + 1;
-                        printf("add\n");
-                        break;
-
-                case '*':
-                        if (sip != ip) {
-                                esip = sip;
-                                arg = strtod(sip, &esip);
-                                if (esip != sip)
-                                        printf("push %lf\n", arg);
-                                else {
-                                        *(ip-1) = '\0';
-                                        printf("push %s\n", sip);
-                                }
-                        }
-                        sip = ip + 1;
-                        printf("mul\n");
-                        break;
-
-                case '/':
-                        if (sip != ip) {
-                                esip = sip;
-                                arg = strtod(sip, &esip);
-                                if (esip != sip)
-                                        printf("push %lf\n", arg);
-                                else {
-                                        *(ip-1) = '\0';
-                                        printf("push %s\n", sip);
-                                }
-                        }
-                        sip = ip + 1;
-                        printf("div\n");
-                        break;
-                default:
-                        break;
-                }
-
-                ip++;
-        }
-
-        //printf("%s\n", d);
-        printf("Hello from rpn\n");
-        return 0;
-}
-
-*/

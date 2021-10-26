@@ -47,11 +47,10 @@ static char *skip(char *const str, const char ch)
 
 int preprocess_asm(code_t *code, FILE *const out) 
 {
-        for (int i = 0; i < code->n_cmds; i++) {
-                if (*code->cmds[i] != '\0')
-                        printf("%s\n", code->cmds[i]);
-        }
+        assert(code);
+        assert(out);
 
+        int error = 0;
         char args[64] = {0};
         char *mem = nullptr;
         char *arg = args;
@@ -67,8 +66,23 @@ int preprocess_asm(code_t *code, FILE *const out)
                         *arg++ = '\0';
 
                 mem = find(arg, '[');
+                if (*mem != '\0') {
+                        arg = find(mem, ']');
+                        thrw(segfault, *arg == '\0',
+                             "Can't find close bracket ]. Line: %d\n", i + 1);
 
-                reverse_notation(arg, args);
+                        *arg = '\0';
+                        arg = mem + 1;
+                }
+
+                error = reverse_notation(arg, args);
+                thrw(segfault, error == -1, 
+                     "Syntax error: \n");
+
+                if (*args == '\0') {
+                        fprintf(out, "%s\n", code->cmds[i]);
+                        continue;
+                }
 
                 arg = args;
                 arg_start = arg;
@@ -112,7 +126,7 @@ int preprocess_asm(code_t *code, FILE *const out)
                         else
                                 fprintf(out, "%s %s\n%s %s\n", 
                                         MN_POP, MN_TX, code->cmds[i], MN_TX); 
-                else 
+                else
                         if (*mem != '\0')
                                 fprintf(out, "%s [%s]\n", code->cmds[i], args);
                         else
@@ -120,35 +134,13 @@ int preprocess_asm(code_t *code, FILE *const out)
         }
 
         return 0;
+
+segfault:
+        printf("%d", *mem);
+        return -1;
 }
 
 #undef PUSH_ARG
-
-/*
-#define CMD(name, opcode, mnemonic, hash)    \
-        const opcode_t name = opcode;        \
-        const char MN_##name[]   = mnemonic; \
-        const uint32_t HASH_##name   = hash; \
-
-#include <commands>
-
-#define CMD(name, opcode, mnemonic, hash)    \
-        case HASH_##name:                       \
-                fprintf                                \
-                break;
-#undef CMD
-
-#define REG(name, num, mnemonic, hash)       \
-        const int name = num;                \
-        const char MN_##name[] = mnemonic; \
-        const uint32_t HASH_##name = hash; \
-
-#include <registers>
-
-#undef REG 
-
-#define CMD
-*/
 
 #define CMD(name, opcode, mnemonic, hash) \
         case hash:                        \
@@ -196,6 +188,7 @@ static int get_arg(char *cmd, cmd_t *const bit_mask)
         uint32_t hash = murmur_hash(cmd, mem - cmd, SEED); 
 
         switch (hash) {
+
 #include <registers>
 
         default:
@@ -208,7 +201,7 @@ static int get_arg(char *cmd, cmd_t *const bit_mask)
 
 #undef REG
 
-int compile_asm(code_t *code, char *const bytecode) 
+int compile_asm(code_t *code, char *const bytecode, size_t *const n_written) 
 {
         assert(code);
         assert(bytecode);
@@ -222,19 +215,24 @@ int compile_asm(code_t *code, char *const bytecode)
         cmd_t bit_mask = 0x00;
 
         for (size_t i = 0; i < code->n_cmds; i++) {
+                bit_mask = 0x00;
                 ip = find(code->cmds[i], ' ');
-
                 hash = murmur_hash(code->cmds[i], 
                                    ip - code->cmds[i], SEED); 
 
                 cmd = get_cmd(hash);
 
                 if (*ip != '\0')
-                        arg = get_arg(ip, &bit_mask);
+                        arg = get_arg(ip + 1, &bit_mask);
 
-                *(cmd_t *)bc++ = arg;
-                if (bit_mask)
-                        *(arg_t *)bc++ = arg;
+                *(cmd_t *)bc = cmd | bit_mask;
+                bc += sizeof(cmd_t);
+                *n_written += sizeof(cmd_t);
+                if (bit_mask) {
+                        *(arg_t *)bc = arg;
+                        bc += sizeof(arg_t);
+                        *n_written += sizeof(arg_t);
+                }
         }
 
         return 0;

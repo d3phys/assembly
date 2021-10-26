@@ -22,7 +22,10 @@ struct asm_compiler_t {
 };
 
 int preprocess_asm(code_t *asm_code, FILE *const out);
-int compile_asm(code_t *asm_code, char *const bytecode);
+
+int compile_asm(code_t *asm_code, 
+                char *const bytecode, size_t *const n_written);
+
 int decompile_asm(char *bytecode);
 
 int construct_asm_code(code_t *const asm_code, char *const assembly);

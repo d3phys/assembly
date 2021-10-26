@@ -1,7 +1,7 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-typedef int item_t;
+typedef double item_t;
 
 //#define UNPROTECT
 //#define CANARY_PROTECT

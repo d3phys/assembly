@@ -5,7 +5,7 @@
 #define thrw(to, condition, fmt, ...)                                    \
         do {                                                             \
                 if (condition) {                                         \
-                        fprintf(stderr, "[at %s (%d)]>>> "               \
+                        fprintf(stderr, "[at %16s (%3d)]>>> "               \
                                 fmt, __func__, __LINE__, ##__VA_ARGS__); \
                         goto to;                                         \
                 }                                                        \

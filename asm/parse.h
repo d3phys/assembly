@@ -26,6 +26,11 @@ int save(const char *const file,
 
 int fmap(const char *const file, char **const buf, size_t *const size);
 
+int map_out(const char *file, char **const buf, const size_t size);
+int map_in (const char *file, char **const buf, size_t *size);
+
+off_t get_size(const char *const file);
+
 #endif /* PARSE_H_ */
 
 

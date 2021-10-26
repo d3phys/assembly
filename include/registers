@@ -1,0 +1,6 @@
+REG(TX, 1, "tx", 0xb4b12d9f)
+REG(AX, 4, "ax", 0xbf2a6ce9)
+REG(BX, 5, "bx", 0x8a5d46d6)
+REG(CX, 6, "cx", 0x46f07356)
+REG(DX, 7, "dx", 0xd05367a3)
+REG(EX, 8, "ex", 0xdb463253)

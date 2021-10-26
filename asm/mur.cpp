@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-        for (int i = 0; i < argc; i++) {
+        for (int i = 1; i < argc; i++) {
                 printf("%x\n", murmur_hash(argv[i], strlen(argv[i]), 0xDED64));
         }
                 //printf("%x\n", murmur_hash(argc)

@@ -1,9 +1,11 @@
-#include "parse.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 #include <errno.h>
+
 #include <thrw.h>
+
+#include "parse.h"
 
 static const unsigned int STK_SIZE = 64;
 

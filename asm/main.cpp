@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <iomap.h>
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
         char *buf = nullptr;
         FILE *out = nullptr;
 
-        fmap(argv[1], &buf, &size);
+        map_in(argv[1], &buf, &size);
         out = fopen(argv[2], "w");
 
         construct_asm_code(&code, buf);

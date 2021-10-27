@@ -1,21 +1,60 @@
+#
+# Main project Makefile. Use it.
+# 
 # Important! Dependencies are done automatically by 'make dep', which also
 # removes any old dependencies. Do not modify it...
+#
 
 CXX = g++
-CXXFLAGS = -Wall 
+CXXFLAGS = -D NDEBUG -g -std=c++14 -fmax-errors=100 -Wall -Wextra -Weffc++  \
+	   -Waggressive-loop-optimizations -Wc++0x-compat -Wc++11-compat    \
+	   -Wc++14-compat -Wcast-align -Wcast-qual -Wchar-subscripts        \
+	   -Wconditionally-supported -Wconversion -Wctor-dtor-privacy       \
+	   -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security \
+	   -Wformat-signedness -Wformat=2 -Winline -Wlogical-op             \
+	   -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd          \
+	   -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls  \
+	   -Wshadow -Wsign-conversion -Wsign-promo -Wstack-usage=8192       \
+	   -Wstrict-null-sentinel -Wstrict-overflow=2                       \
+	   -Wsuggest-attribute=noreturn -Wsuggest-final-methods             \
+	   -Wsuggest-final-types -Wsuggest-override -Wswitch-default        \
+	   -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code             \
+	   -Wunused -Wuseless-cast -Wvariadic-macros -Wno-literal-suffix    \
+	   -Wno-missing-field-initializers -Wno-narrowing                   \
+	   -Wno-old-style-cast -Wno-varargs  -fcheck-new                    \
+	   -fsized-deallocation -fstack-check -fstack-protector             \
+	   -fstrict-overflow  -flto-odr-type-merging                        \
+	   -fno-omit-frame-pointer -fPIE  -fsanitize=address                \
+	   -fsanitize=bool -fsanitize=bounds  -fsanitize=enum               \
+	   -fsanitize=float-cast-overflow -fsanitize=float-divide-by-zero   \
+	   -fsanitize=integer-divide-by-zero  -fsanitize=leak               \
+	   -fsanitize=nonnull-attribute  -fsanitize=null  -fsanitize=return \
+	   -fsanitize=returns-nonnull-attribute                             \
+	   -fsanitize=signed-integer-overflow -fsanitize=unreachable        \
+	   -fsanitize=vla-bound -fsanitize=vptr -lm -pie 	            \
+	   -Wno-format-nonliteral 
+
 CPP = $(CXX) -E 
 
-OBJS = main.o
+OBJS = 
 
-SUBDIRS = cpu assembler
-MODULES = cpu/processor.o cpu/stack/astack.o assembler/assembler.o
+SUBDIRS = cpu asm lib utils
 
 INC = include
 
 .EXPORT_ALL_VARIABLES: CXX CXXFLAGS CPP
 
-whole.o: $(OBJS) subdirs
-	$(LD) -r -o $@ $(OBJS) $(MODULES)
+build: $(OBJS) subdirs
+	@echo build
+
+mur: subdirs
+	$(CXX) $(CXXFLAGS) -o mur utils/mur.o lib/lib.o
+
+asm: subdirs asm/main.o
+	$(CXX) $(CXXFLAGS) -o ass asm/asm.o asm/main.o lib/lib.o
+
+cpu: subdirs cpu/main.o
+	$(CXX) $(CXXFLAGS) -o cpu cpu/execute.o cpu/processor.o cpu/stack/astack.o asm/assembler.o
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c -I$(INC) $< -o $@
@@ -25,54 +64,8 @@ clean:
 	for i in $(SUBDIRS); do (cd $$i && $(MAKE) clean); done
 
 dep:
-	@sed '/\#\#\# Dependencies \#\#\#/q' < Makefile > temp_make
-	@$(CPP) -M *.cpp -I$(INC) >> temp_make
-	@cp temp_make Makefile
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) dep) || exit; done
 
 subdirs:
 	for i in $(SUBDIRS); do (cd $$i && echo $$i && $(MAKE)) || exit; done
 
-### Dependencies ###
-main.o: main.cpp /usr/include/stdc-predef.h /usr/include/stdio.h \
- /usr/include/bits/libc-header-start.h /usr/include/features.h \
- /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
- /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stddef.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stdarg.h \
- /usr/include/bits/types.h /usr/include/bits/timesize.h \
- /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
- /usr/include/bits/types/__fpos_t.h /usr/include/bits/types/__mbstate_t.h \
- /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
- /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
- /usr/include/bits/types/cookie_io_functions_t.h \
- /usr/include/bits/stdio_lim.h /usr/include/bits/floatn.h \
- /usr/include/bits/floatn-common.h /usr/include/sys/mman.h \
- /usr/include/bits/mman.h /usr/include/bits/mman-map-flags-generic.h \
- /usr/include/bits/mman-linux.h /usr/include/bits/mman-shared.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/bits/getopt_posix.h /usr/include/bits/getopt_core.h \
- /usr/include/bits/unistd_ext.h /usr/include/c++/11.1.0/stdlib.h \
- /usr/include/c++/11.1.0/cstdlib \
- /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++config.h \
- /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/os_defines.h \
- /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/cpu_defines.h \
- /usr/include/c++/11.1.0/pstl/pstl_config.h /usr/include/stdlib.h \
- /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
- /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
- /usr/include/sys/types.h /usr/include/bits/types/clock_t.h \
- /usr/include/bits/types/clockid_t.h /usr/include/bits/types/time_t.h \
- /usr/include/bits/types/timer_t.h /usr/include/bits/stdint-intn.h \
- /usr/include/endian.h /usr/include/bits/endian.h \
- /usr/include/bits/endianness.h /usr/include/bits/byteswap.h \
- /usr/include/bits/uintn-identity.h /usr/include/sys/select.h \
- /usr/include/bits/select.h /usr/include/bits/types/sigset_t.h \
- /usr/include/bits/types/__sigset_t.h \
- /usr/include/bits/types/struct_timeval.h \
- /usr/include/bits/types/struct_timespec.h \
- /usr/include/bits/pthreadtypes.h /usr/include/bits/thread-shared-types.h \
- /usr/include/bits/pthreadtypes-arch.h /usr/include/bits/struct_mutex.h \
- /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-float.h /usr/include/c++/11.1.0/bits/std_abs.h

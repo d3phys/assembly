@@ -2,12 +2,13 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include <assembly.h>
+#include <thrw.h>
+#include <hash.h>
 
 #include "parse.h"
 #include "compiler.h"
-#include <thrw.h>
-#include <hash.h>
 
 const size_t N_LABELS = 64;
 
@@ -336,3 +337,5 @@ void destruct_asm_code(code_t *const asm_code)
         free(asm_code->cmds);
         asm_code->n_cmds = 0;
 }
+
+

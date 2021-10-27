@@ -3,11 +3,18 @@
 
 #include <stdint.h>
 
+struct header_t {
+        unsigned int signature = 0x4441444;
+        unsigned int version = 1;
+        size_t n_cmds = 0;
+};
+
 const unsigned int SEED = 0xDED64;
 
+typedef double   val_t;
 typedef uint64_t arg_t;
 typedef uint16_t cmd_t;
-typedef uint8_t opcode_t;
+typedef uint8_t  opcode_t;
 
 const uint16_t MSB = ~((cmd_t)(~0x00) >> 0x01);
 

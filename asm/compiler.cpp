@@ -289,8 +289,17 @@ int compile_asm(const code_t *const code,
 
         labels_t lb = {0};
 
-        compile(code, bytecode, &lb, n_written);
-        compile(code, bytecode, &lb, n_written);
+        char *bc = bytecode;
+
+        header_t hdr = {SIGNATURE,
+                        VERSION,
+                        PATCHLEVEL};
+
+        *(header_t *)bc = hdr;
+        bc += sizeof(header_t);
+
+        compile(code, bc, &lb, n_written);
+        compile(code, bc, &lb, n_written);
 
         return 0;
 }

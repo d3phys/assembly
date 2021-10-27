@@ -3,10 +3,14 @@
 
 #include <stdint.h>
 
+const unsigned int SIGNATURE  = 'ASS';
+const unsigned int VERSION    = 0;
+const unsigned int PATCHLEVEL = 3;
+
 struct header_t {
-        unsigned int signature = 0x4441444;
-        unsigned int version = 1;
-        size_t n_cmds = 0;
+        unsigned int signature  = SIGNATURE;
+        unsigned int version    = VERSION;
+        unsigned int patchlevel = PATCHLEVEL;
 };
 
 const unsigned int SEED = 0xDED64;

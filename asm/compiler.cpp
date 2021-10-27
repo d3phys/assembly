@@ -9,6 +9,18 @@
 #include <thrw.h>
 #include <hash.h>
 
+const size_t N_LABELS = 64;
+
+struct label_t {
+        uint32_t hash  = 0x00;
+        size_t address = 0x00;
+};
+
+struct labels_t {
+        label_t labels[N_LABELS] = {0};
+        size_t count = 0;
+};
+
 static inline void uncomment(char *const cmd)
 {
         assert(cmd);
@@ -69,7 +81,7 @@ int preprocess_asm(code_t *code, FILE *const out)
                 if (*mem != '\0') {
                         arg = find(mem, ']');
                         thrw(segfault, *arg == '\0',
-                             "Can't find close bracket ]. Line: %d\n", i + 1);
+                             "Can't find close bracket ]. Line: %lu\n", i + 1);
 
                         *arg = '\0';
                         arg = mem + 1;
@@ -164,7 +176,7 @@ static cmd_t get_cmd(uint32_t hash)
         case hash:                           \
                 return name;
 
-static int get_arg(char *cmd, cmd_t *const bit_mask)
+static int get_arg(char *cmd, cmd_t *const bit_mask, const labels_t *const lb)
 {
         arg_t arg = 0;
         char *mem = find(cmd, '[');
@@ -172,9 +184,7 @@ static int get_arg(char *cmd, cmd_t *const bit_mask)
                 *bit_mask |= MEM_T;
 
                 cmd = ++mem;
-
                 mem = find(mem, ']');
-                *mem = '\0';
         }
 
         char *end = cmd;
@@ -184,16 +194,23 @@ static int get_arg(char *cmd, cmd_t *const bit_mask)
                 return arg;
         }
         
-        *bit_mask |= REG_T;
         uint32_t hash = murmur_hash(cmd, mem - cmd, SEED); 
 
+        *bit_mask |= REG_T;
+
         switch (hash) {
-
 #include <registers>
-
         default:
                 assert(0);
                 break;
+        }
+
+        *bit_mask &= ~REG_T;
+        *bit_mask |=  VAL_T;
+
+        for (size_t i = 0; i < lb->count; i++) {
+                if (hash == lb->labels[i].hash)
+                        return lb->labels[i].address;
         }
 
         return 0;
@@ -201,10 +218,10 @@ static int get_arg(char *cmd, cmd_t *const bit_mask)
 
 #undef REG
 
-int compile_asm(code_t *code, char *const bytecode, size_t *const n_written) 
+static int compile(const code_t *const code, char *const bytecode, 
+                   labels_t *const lb, size_t *const n_written)
 {
-        assert(code);
-        assert(bytecode);
+        *n_written = 0;
 
         uint32_t hash = 0x00;
         char *bc = bytecode;
@@ -216,14 +233,95 @@ int compile_asm(code_t *code, char *const bytecode, size_t *const n_written)
 
         for (size_t i = 0; i < code->n_cmds; i++) {
                 bit_mask = 0x00;
+
                 ip = find(code->cmds[i], ' ');
+
+                if (*(ip - 1) == ':') {
+                        thrw(error, (lb->count == N_LABELS), 
+                             "Labels amount overflow\n");
+
+                        hash = murmur_hash(code->cmds[i], 
+                                           ip - code->cmds[i] - 1, SEED); 
+
+                        lb->labels[++lb->count].hash  = hash;
+                        lb->labels[lb->count].address = bc - bytecode;
+                        continue;
+                }
+
                 hash = murmur_hash(code->cmds[i], 
                                    ip - code->cmds[i], SEED); 
 
                 cmd = get_cmd(hash);
 
                 if (*ip != '\0')
-                        arg = get_arg(ip + 1, &bit_mask);
+                        arg = get_arg(ip + 1, &bit_mask, lb);
+
+                *(cmd_t *)bc = cmd | bit_mask;
+                bc += sizeof(cmd_t);
+                *n_written += sizeof(cmd_t);
+
+                if (bit_mask) {
+                        *(arg_t *)bc = arg;
+                        bc += sizeof(arg_t);
+                        *n_written += sizeof(arg_t);
+                }
+        }
+
+        return 0;
+
+error:
+        return -1;
+}
+
+int compile_asm(const code_t *const code, 
+                char *const bytecode, size_t *const n_written) 
+{
+        assert(code);
+        assert(bytecode);
+
+        labels_t lb = {0};
+
+        compile(code, bytecode, &lb, n_written);
+        compile(code, bytecode, &lb, n_written);
+
+        return 0;
+
+/*
+        labels_t lb = {0};
+
+        uint32_t hash = 0x00;
+        char *bc = bytecode;
+        size_t n_bytes = 0;
+        char *ip = nullptr;
+        cmd_t cmd = 0x00;
+        arg_t arg = 0x00;
+        cmd_t bit_mask = 0x00;
+
+        for (size_t i = 0; i < code->n_cmds; i++) {
+                bit_mask = 0x00;
+
+                ip = find(code->cmds[i], ' ');
+
+                if (*(ip - 1) == ':') {
+                        ip--;
+                        thrw(error, (lb.count == N_LABELS), 
+                             "Labels amount overflow\n");
+
+                        hash = murmur_hash(code->cmds[i], 
+                                           ip - code->cmds[i], SEED); 
+
+                        lb.labels[++lb.count].hash = hash;
+                        lb.labels[lb.count].address = (size_t)bc;
+                        continue;
+                }
+
+                hash = murmur_hash(code->cmds[i], 
+                                   ip - code->cmds[i], SEED); 
+
+                cmd = get_cmd(hash);
+
+                if (*ip != '\0')
+                        arg = get_arg(ip + 1, &bit_mask, &lb);
 
                 *(cmd_t *)bc = cmd | bit_mask;
                 bc += sizeof(cmd_t);
@@ -236,6 +334,13 @@ int compile_asm(code_t *code, char *const bytecode, size_t *const n_written)
         }
 
         return 0;
+
+        for (size_t i = 0; i < lb.count; i++) {
+                printf("LABEL: %x: %lx\n", lb.labels[i].hash, lb.labels[i].address);
+        }
+error:
+        return -1;
+        */
 }
 
 int decompile_asm(char *bytecode);

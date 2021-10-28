@@ -76,6 +76,6 @@ ACTION(DIV,
 
 ACTION(SHW,
 {
-        printf("%lf\n", pop_stack(stack));
+        printf("%lg\n", pop_stack(stack));
 })
 

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assembly.h>
+#include <math.h>
 
 #include "executor.h"
 
@@ -36,10 +37,13 @@ int execute(cpu_t *const cpu, const char *const bytecode)
         stack_t *const stack = &cpu->stack;
         
         char o = 0;
+
 #define ip   cpu->ip
 #define temp cpu->temp
+#define arg  *(arg_t *)ip 
 
-        ip = bytecode + sizeof(header_t);
+        const char *const start = bytecode + sizeof(header_t);
+        ip = start;
 
         while (1) {
                 cmd = *(const cmd_t *)ip;
@@ -48,6 +52,7 @@ int execute(cpu_t *const cpu, const char *const bytecode)
 
                 switch (cmd) {
 #include <actions>
+#include <jmp>
                 default:
                         break;
                 }

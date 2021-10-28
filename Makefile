@@ -44,6 +44,10 @@ INC = include
 
 .EXPORT_ALL_VARIABLES: CXX CXXFLAGS CPP
 
+p:
+	./ass code out
+	./ded output
+
 build: $(OBJS) subdirs
 	@echo build
 

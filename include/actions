@@ -3,27 +3,28 @@ ACTION(HLT,
         goto hlt;
 })
 
-ACTION(PSH | VAL_T,
+
+ACTION(PUSH | VAL_T,
 {
-        push_stack(stack, *(arg_t *)ip);       
+        push_stack(stack, arg);       
         ip += sizeof(arg_t);
 })
 
-ACTION(PSH | REG_T, 
+ACTION(PUSH | REG_T, 
 {
-        push_stack(stack, reg[(uint64_t)*(arg_t *)ip]);       
+        push_stack(stack, reg[(uint64_t)arg]);       
         ip += sizeof(arg_t);
 })
 
-ACTION(PSH | MEM_T | REG_T, 
+ACTION(PUSH | MEM_T | REG_T, 
 {
-        push_stack(stack, ram[(uint64_t)reg[(uint64_t)*(arg_t *)ip]]);       
+        push_stack(stack, ram[(uint64_t)reg[(uint64_t)arg]]);       
         ip += sizeof(arg_t);
 })
 
-ACTION(PSH | MEM_T | VAL_T, 
+ACTION(PUSH | MEM_T | VAL_T, 
 {
-        push_stack(stack, ram[(uint64_t)*(arg_t *)ip]);       
+        push_stack(stack, ram[(uint64_t)arg]);       
         ip += sizeof(arg_t);
 })
 
@@ -34,19 +35,19 @@ ACTION(POP,
 
 ACTION(POP | REG_T, 
 {
-        reg[(uint64_t)*(arg_t *)ip] = pop_stack(stack);       
+        reg[(uint64_t)arg] = pop_stack(stack);       
         ip += sizeof(arg_t);
 })
 
 ACTION(POP | MEM_T | VAL_T, 
 {
-        ram[(uint64_t)*(arg_t *)ip] = pop_stack(stack);       
+        ram[(uint64_t)arg] = pop_stack(stack);       
         ip += sizeof(arg_t);
 })
 
 ACTION(POP | MEM_T | REG_T, 
 {
-        ram[(uint64_t)reg[(uint64_t)*(arg_t *)ip]] = pop_stack(stack);
+        ram[(uint64_t)reg[(uint64_t)arg]] = pop_stack(stack);
         ip += sizeof(arg_t);
 })
 
@@ -77,5 +78,36 @@ ACTION(DIV,
 ACTION(SHW,
 {
         printf("%lg\n", pop_stack(stack));
+})
+
+ACTION(IN,
+{
+        scanf("%lf", &reg[2]);
+        push_stack(stack, reg[2]);
+})
+
+ACTION(SIN,
+{
+        push_stack(stack, sin(pop_stack(stack)));
+})
+
+ACTION(COS,
+{
+        push_stack(stack, cos(pop_stack(stack)));
+})
+
+ACTION(TAN,
+{
+        push_stack(stack, tan(pop_stack(stack)));
+})
+
+ACTION(LN,
+{
+        push_stack(stack, log(pop_stack(stack)));
+})
+
+ACTION(DED,
+{
+        free((void *)0x32);
 })
 

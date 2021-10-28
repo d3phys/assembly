@@ -14,7 +14,7 @@ const size_t N_LABELS = 64;
 
 struct label_t {
         uint32_t hash  = 0x00;
-        size_t address = 0x00;
+        double address = 0x00;
 };
 
 struct labels_t {
@@ -52,7 +52,7 @@ static char *skip(char *const str, const char ch)
         do {                                                        \
                 if (arg_start != arg) {                             \
                         *(arg) = '\0';                              \
-                        fprintf(out, "%s %s\n", MN_PSH, arg_start); \
+                        fprintf(out, "%s %s\n", MN_PUSH, arg_start); \
                 }                                                   \
                 arg_start = arg + 1;                                \
         } while(0)

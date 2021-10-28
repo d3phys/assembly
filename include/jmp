@@ -1,0 +1,149 @@
+#define __JUMP_VAL     ip = start + (uint64_t)arg;
+#define __JUMP_REG     ip = start + (uint64_t)reg[(uint64_t)arg];
+#define __JUMP_MEM_VAL ip = start + (uint64_t)ram[(uint64_t)arg];
+#define __JUMP_MEM_REG ip = start + (uint64_t)ram[(uint64_t)reg[(uint64_t)arg]];
+
+#define __JUMP_CHECK(op, act) reg[3] = pop_stack(stack);        \
+                         if (pop_stack(stack) op reg[3]) {      \
+                                act                             \
+                         }
+
+ACTION(JMP | VAL_T,
+{
+        __JUMP_VAL
+})
+
+ACTION(JMP | REG_T,
+{
+        __JUMP_REG
+})
+
+ACTION(JMP | MEM_T | VAL_T,
+{
+        __JUMP_MEM_VAL
+})
+
+ACTION(JMP | MEM_T | REG_T,
+{
+        __JUMP_MEM_REG
+})
+
+ACTION(JE | VAL_T,
+{
+        __JUMP_CHECK(==, __JUMP_VAL);
+})
+
+ACTION(JE | REG_T,
+{
+        __JUMP_CHECK(==, __JUMP_REG);
+})
+
+ACTION(JE | MEM_T | VAL_T,
+{
+        __JUMP_CHECK(==, __JUMP_MEM_VAL);
+})
+
+ACTION(JE | MEM_T | REG_T,
+{
+        __JUMP_CHECK(==, __JUMP_MEM_REG);
+})
+
+ACTION(JNE | VAL_T,
+{
+        __JUMP_CHECK(!=, __JUMP_VAL);
+})
+
+ACTION(JNE | REG_T,
+{
+        __JUMP_CHECK(!=, __JUMP_REG);
+})
+
+ACTION(JNE | MEM_T | VAL_T,
+{
+        __JUMP_CHECK(!=, __JUMP_MEM_VAL);
+})
+
+ACTION(JNE | MEM_T | REG_T,
+{
+        __JUMP_CHECK(!=, __JUMP_MEM_REG);
+})
+
+ACTION(JA | VAL_T,
+{
+        __JUMP_CHECK(>, __JUMP_VAL);
+})
+
+ACTION(JA | REG_T,
+{
+        __JUMP_CHECK(>, __JUMP_REG);
+})
+
+ACTION(JA | MEM_T | VAL_T,
+{
+        __JUMP_CHECK(>, __JUMP_MEM_VAL);
+})
+
+ACTION(JA | MEM_T | REG_T,
+{
+        __JUMP_CHECK(>, __JUMP_MEM_REG);
+})
+
+ACTION(JAE | VAL_T,
+{
+        __JUMP_CHECK(>=, __JUMP_VAL);
+})
+
+ACTION(JAE | REG_T,
+{
+        __JUMP_CHECK(>=, __JUMP_REG);
+})
+
+ACTION(JAE | MEM_T | VAL_T,
+{
+        __JUMP_CHECK(>=, __JUMP_MEM_VAL);
+})
+
+ACTION(JAE | MEM_T | REG_T,
+{
+        __JUMP_CHECK(>=, __JUMP_MEM_REG);
+})
+
+ACTION(JB | VAL_T,
+{
+        __JUMP_CHECK(<, __JUMP_VAL);
+})
+
+ACTION(JB | REG_T,
+{
+        __JUMP_CHECK(<, __JUMP_REG);
+})
+
+ACTION(JB | MEM_T | VAL_T,
+{
+        __JUMP_CHECK(<, __JUMP_MEM_VAL);
+})
+
+ACTION(JB | MEM_T | REG_T,
+{
+        __JUMP_CHECK(<, __JUMP_MEM_REG);
+})
+
+ACTION(JBE | VAL_T,
+{
+        __JUMP_CHECK(<=, __JUMP_VAL);
+})
+
+ACTION(JBE | REG_T,
+{
+        __JUMP_CHECK(<=, __JUMP_REG);
+})
+
+ACTION(JBE | MEM_T | VAL_T,
+{
+        __JUMP_CHECK(<=, __JUMP_MEM_VAL);
+})
+
+ACTION(JBE | MEM_T | REG_T,
+{
+        __JUMP_CHECK(<=, __JUMP_MEM_REG);
+})

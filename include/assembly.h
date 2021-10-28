@@ -26,7 +26,7 @@ const cmd_t MEM_T = MSB >> 0x01;
 const cmd_t REG_T = MSB >> 0x02;
 
 #define CMD(name, opcode, mnemonic, hash)    \
-        const opcode_t name = opcode;        \
+        const opcode_t name      = opcode;        \
         const char MN_##name[]   = mnemonic; \
         const uint32_t HASH_##name   = hash; \
 

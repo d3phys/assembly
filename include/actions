@@ -3,6 +3,10 @@ ACTION(HLT,
         goto hlt;
 })
 
+ACTION(PAUS,
+{
+        reg[3] = getchar();
+})
 
 ACTION(PUSH | VAL_T,
 {

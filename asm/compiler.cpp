@@ -249,8 +249,19 @@ static int compile(const code_t *const code, char *const bytecode,
                         hash = murmur_hash(code->cmds[i], 
                                            ip - code->cmds[i] - 1, SEED); 
 
-                        lb->labels[++lb->count].hash  = hash;
-                        lb->labels[lb->count].address = bc - bytecode;
+                        for (size_t i = 0; i < lb->count; i++) {
+                                if (hash == lb->labels[i].hash) {
+                                        lb->labels[i].address = bc - bytecode;
+                                        hash = 0;
+                                        break;
+                                }
+                        }
+
+                        if (hash) {
+                                lb->labels[lb->count].hash  = hash;
+                                lb->labels[lb->count++].address = bc - bytecode;
+                        }
+
                         continue;
                 }
 
@@ -296,7 +307,9 @@ int compile_asm(const code_t *const code,
         *(header_t *)bc = hdr;
         bc += sizeof(header_t);
 
+        printf("LABELS: %x\n", lb.labels[0].hash);
         compile(code, bc, &lb, n_written);
+        printf("LABELS: %x\n", lb.labels[0].hash);
         compile(code, bc, &lb, n_written);
 
         *n_written += sizeof(header_t);

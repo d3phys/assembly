@@ -8,6 +8,17 @@
                                 act                             \
                          }
 
+ACTION(CALL | VAL_T,
+{
+        push_stack(stack, (arg_t)(uint64_t)(ip + sizeof(arg_t) - start));
+        __JUMP_VAL
+})
+
+ACTION(RET,
+{
+        ip = start + (uint64_t)pop_stack(stack);
+})
+
 ACTION(JMP | VAL_T,
 {
         __JUMP_VAL

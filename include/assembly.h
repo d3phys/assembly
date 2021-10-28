@@ -3,9 +3,13 @@
 
 #include <stdint.h>
 
+const size_t VRAM_ADDR = 64;
+const size_t RAM_CAP   = 128;
+const size_t N_REGS     = 0x08;
+
 const unsigned int SIGNATURE  = 'ASS';
 const unsigned int VERSION    = 0;
-const unsigned int PATCHLEVEL = 3;
+const unsigned int PATCHLEVEL = 6;
 
 struct header_t {
         unsigned int signature  = SIGNATURE;
@@ -42,16 +46,5 @@ const cmd_t REG_T = MSB >> 0x02;
 
 #undef REG 
 
-#define ACTION(code, action)
-
-ACTION(PSH | VAL_T, 
-{
-        pop;
-})
-
-ACTION(PSH | REG_T, 
-{
-        pop;
-})
 
 #endif /* ASSEMBLY_H_ */

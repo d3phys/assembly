@@ -11,84 +11,71 @@ ACTION(PSH | VAL_T,
 
 ACTION(PSH | REG_T, 
 {
-        push_stack(stack, reg[*(arg_t *)ip]);       
+        push_stack(stack, reg[(uint64_t)*(arg_t *)ip]);       
         ip += sizeof(arg_t);
 })
 
 ACTION(PSH | MEM_T | REG_T, 
 {
-        push_stack(stack, ram[(arg_t)(*(val_t *)&reg[*(arg_t *)ip])]);       
+        push_stack(stack, ram[(uint64_t)reg[(uint64_t)*(arg_t *)ip]]);       
         ip += sizeof(arg_t);
 })
 
 ACTION(PSH | MEM_T | VAL_T, 
 {
-        push_stack(stack, ram[(arg_t)*(val_t *)ip]);       
+        push_stack(stack, ram[(uint64_t)*(arg_t *)ip]);       
         ip += sizeof(arg_t);
 })
 
 ACTION(POP, 
 {
-        pop_stack(stack);       
+        pop_stack(stack);
 })
 
 ACTION(POP | REG_T, 
 {
-        reg[*(arg_t *)ip] = pop_stack(stack);       
+        reg[(uint64_t)*(arg_t *)ip] = pop_stack(stack);       
         ip += sizeof(arg_t);
 })
 
 ACTION(POP | MEM_T | VAL_T, 
 {
-        ram[(arg_t)*(val_t *)ip] = pop_stack(stack);       
+        ram[(uint64_t)*(arg_t *)ip] = pop_stack(stack);       
         ip += sizeof(arg_t);
 })
 
 ACTION(POP | MEM_T | REG_T, 
 {
-        ram[(arg_t)(*(val_t *)&reg[*(arg_t *)ip])] = pop_stack(stack);
+        ram[(uint64_t)reg[(uint64_t)*(arg_t *)ip]] = pop_stack(stack);
         ip += sizeof(arg_t);
 })
 
 ACTION(SUB,
 {
         reg[2] = pop_stack(stack);
-        reg[3] = pop_stack(stack);
-        temp = *(val_t *)&reg[3] - *(val_t *)&reg[2];
-
-        push_stack(stack, *(arg_t *)&temp);
+        push_stack(stack, pop_stack(stack) - reg[2]);
 })
 
 ACTION(ADD,
 {
         reg[2] = pop_stack(stack);
-        reg[3] = pop_stack(stack);
-        temp = *(val_t *)&reg[3] + *(val_t *)&reg[2];
-
-        push_stack(stack, *(arg_t *)&temp);
+        push_stack(stack, pop_stack(stack) + reg[2]);
 })
 
 ACTION(MUL,
 {
         reg[2] = pop_stack(stack);
-        reg[3] = pop_stack(stack);
-        temp = *(val_t *)&reg[3] * *(val_t *)&reg[2];
-
-        push_stack(stack, *(arg_t *)&temp);
+        push_stack(stack, pop_stack(stack) * reg[2]);
 })
 
 ACTION(DIV,
 {
         reg[2] = pop_stack(stack);
-        reg[3] = pop_stack(stack);
-        temp = *(val_t *)&reg[3] / *(val_t *)&reg[2];
-
-        push_stack(stack, *(arg_t *)&temp);
+        push_stack(stack, pop_stack(stack) / reg[2]);
 })
 
 ACTION(SHW,
 {
-        reg[2] = pop_stack(stack);
-        printf("%lf\n", *(val_t *)&reg[2]);
+        printf("%lf\n", pop_stack(stack));
 })
 

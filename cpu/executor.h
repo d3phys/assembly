@@ -11,7 +11,6 @@ const size_t MEMORY_SIZE = 1000;
 
 struct cpu_t {
         const char *ip = 0;
-        val_t temp = 0;
 
         stack_t stack = {0};
         arg_t registers[N_REGS] = {0};

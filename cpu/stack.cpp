@@ -508,7 +508,7 @@ void dump_stack(stack_t *const stk)
                                 log_buf("| 0x%.4lX stack[%7lu] = %18s |\n", 
                                         sizeof(*stk->items) * i, i, "poison");
                         } else {
-                                log_buf("| 0x%.4lX stack[%7lu] = %18lu|\n", 
+                                log_buf("| 0x%.4lX stack[%7lu] = %18lg|\n", 
                                         sizeof(*stk->items) * i, i, stk->items[i]);
                         }
                 }

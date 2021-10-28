@@ -194,13 +194,9 @@ static arg_t get_arg(char *cmd, cmd_t *const bit_mask, const labels_t *const lb)
         }
 
         char *end = cmd;
-        double a = strtod(cmd, &end);
-        if (end != cmd) {
-                *bit_mask |= VAL_T;
-                arg = *(arg_t *)&a;
-
+        arg = strtod(cmd, &end);
+        if (end != cmd)
                 return arg;
-        }
         
         uint32_t hash = murmur_hash(cmd, mem - cmd, SEED); 
 

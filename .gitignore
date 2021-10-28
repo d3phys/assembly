@@ -8,5 +8,14 @@ test
 #ctags file
 tags
 
+#test files
+log.html
+mur
+ass
+ded
+out
+output
+code
+
 # Doxygen generated
 #/docs/compiled

@@ -1,0 +1,19 @@
+push 2
+pop bx
+push 3
+pop ax
+push 4
+pop cx
+push bx
+push bx
+mul
+push 4
+push ax
+mul
+push cx
+mul
+sub
+pop tx
+push tx
+show
+hlt

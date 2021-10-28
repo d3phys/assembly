@@ -51,10 +51,10 @@ mur: subdirs
 	$(CXX) $(CXXFLAGS) -o mur utils/mur.o lib/lib.o
 
 asm: subdirs asm/main.o
-	$(CXX) $(CXXFLAGS) -o ass asm/asm.o asm/main.o lib/lib.o
+	$(CXX) $(CXXFLAGS) -o ass asm/main.o asm/asm.o lib/lib.o
 
 cpu: subdirs cpu/main.o
-	$(CXX) $(CXXFLAGS) -o cpu cpu/execute.o cpu/processor.o cpu/stack/astack.o asm/assembler.o
+	$(CXX) $(CXXFLAGS) -o ded cpu/main.o cpu/cpu.o lib/lib.o
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c -I$(INC) $< -o $@

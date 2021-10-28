@@ -37,7 +37,9 @@ int main(int argc, char *argv[])
 
         map_in(argv[2], &buf, &size);
         construct_asm_code(&code, buf);
-        size_t fsize = code.n_cmds * (sizeof(cmd_t) + sizeof(arg_t));
+        size_t fsize = code.n_cmds * (sizeof(cmd_t) + sizeof(arg_t)) +
+                       sizeof(header_t);
+
         printf("Size: %lu\n", fsize);
         map_out(file, &outbuf, fsize);
         perror("Map out");

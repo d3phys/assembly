@@ -43,18 +43,16 @@ const cmd_t REG_T = MSB >> 0x02;
 
 #undef REG 
 
-/*
-#define ACTION(code, action)             \
+#define ACTION(code, action)
 
-ACT(PSH | VAL_T, 
+ACTION(PSH | VAL_T, 
 {
         pop;
 })
 
-ACT(PSH | REG_T, 
+ACTION(PSH | REG_T, 
 {
         pop;
 })
-*/
 
 #endif /* ASSEMBLY_H_ */

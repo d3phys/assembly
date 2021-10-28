@@ -301,6 +301,8 @@ int compile_asm(const code_t *const code,
         compile(code, bc, &lb, n_written);
         compile(code, bc, &lb, n_written);
 
+        *n_written += sizeof(header_t);
+
         return 0;
 }
 

@@ -13,13 +13,17 @@ main:
         in
         pop cx
 
-        call solve_quadratic
+        jmp solve_quadratic
 ret
 
 solve_quadratic:
         push ax 
         push 0
         je solve_linear
+
+        push cx
+        push 0
+        je degenerated
 
         push bx^2 - 4 * ax * cx
         pop dx
@@ -37,11 +41,32 @@ solve_quadratic:
         push (dx - bx) / (2 * ax)
         show 
         push 0 - (dx + bx) / (2 * ax)
+        show 
 ret
 
 solve_linear:
+        push bx
+        push 0
+        je huge_or_zero
+
+        push cx
+        push 0
+        je zero
+
         push 0 - cx / bx
         show
+        hlt
+
+huge_or_zero:
+        push cx
+        push 0
+        je huge
+        jmp no_solutions
+        hlt
+
+zero:
+        push 0
+        show 
         hlt
 
 zero_discr:
@@ -53,4 +78,23 @@ no_solutions:
         push 404
         show
         hlt
+
+huge:
+        push 1337
+        show
+        hlt
+
+
+degenerated: 
+        push 0
+        show 
+
+        push ax
+        push bx
+        pop cx
+        pop bx 
+        jmp solve_linear
+
+        hlt
+
 

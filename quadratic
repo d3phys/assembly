@@ -1,0 +1,56 @@
+; Quadratic equation solver
+; d3phys
+; 29.10.2021
+
+call main
+hlt
+
+main:
+        in
+        pop ax
+        in
+        pop bx
+        in
+        pop cx
+
+        call solve_quadratic
+ret
+
+solve_quadratic:
+        push ax 
+        push 0
+        je solve_linear
+
+        push bx^2 - 4 * ax * cx
+        pop dx
+
+        push dx
+        push 0
+        jb no_solutions
+        
+        push dx 
+        push 0
+        je zero_discr
+
+        push dx ^ 0.5
+        pop dx
+        push (dx - bx) / (2 * ax)
+        show 
+        push 0 - (dx + bx) / (2 * ax)
+ret
+
+solve_linear:
+        push 0 - cx / bx
+        show
+        hlt
+
+zero_discr:
+        push 0 - bx / (2 * ax)
+        show
+        hlt
+
+no_solutions:
+        push 404
+        show
+        hlt
+

@@ -20,10 +20,10 @@ int destruct_cpu(cpu_t *const cpu)
         return 0;
 }
 
-#define ACTION(code, action) \
-        case code:           \
-                action       \
-                dump_stack(stack);\
+#define ACTION(code, action)       \
+        case code:                 \
+                action             \
+                dump_stack(stack); \
                 break;
 
 int execute(cpu_t *const cpu, const char *const bytecode)

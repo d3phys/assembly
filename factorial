@@ -1,0 +1,39 @@
+; Factorial
+; d3phys
+; 29.01.2021
+
+call main
+hlt
+
+main:
+        in
+        pop ax
+
+        push 1
+        pop dx
+        call factorial
+
+        push dx
+        show
+ret
+
+factorial:
+        push ax
+        push 1
+        jb return
+
+        push ax
+        push dx
+        mul
+        pop dx
+
+        push ax
+        push 1
+        sub
+        pop ax
+
+        call factorial
+return:
+        ret
+
+

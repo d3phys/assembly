@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assembly.h>
 #include <math.h>
+#include <assert.h>
 
 #include "executor.h"
 
@@ -21,7 +22,6 @@ int destruct_cpu(cpu_t *const cpu)
 
 #define ACTION(code, action) \
         case code:           \
-                printf("CMD %lx\n", cmd); \
                 action       \
                 dump_stack(stack);\
                 break;
@@ -35,12 +35,10 @@ int execute(cpu_t *const cpu, const char *const bytecode)
         arg_t   *const reg   =  cpu->registers;
         arg_t   *const ram   =  cpu->ram;
         stack_t *const stack = &cpu->stack;
-        
-        char o = 0;
 
 #define ip   cpu->ip
 #define temp cpu->temp
-#define arg  *(arg_t *)ip 
+#define arg  *(const arg_t *)ip 
 
         const char *const start = bytecode + sizeof(header_t);
         ip = start;
@@ -54,6 +52,7 @@ int execute(cpu_t *const cpu, const char *const bytecode)
 #include <actions>
 #include <jmp>
                 default:
+                        assert(0);
                         break;
                 }
 

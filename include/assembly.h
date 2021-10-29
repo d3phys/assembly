@@ -3,11 +3,16 @@
 
 #include <stdint.h>
 
-const size_t VRAM_ADDR = 64;
-const size_t RAM_CAP   = 128;
+const size_t SCREEN_X = 8;
+const size_t SCREEN_Y = 8;
+
+const double EPSILON = 1e-200;
+
+const size_t VRAM_START = 64;
+const size_t RAM_CAP    = 128;
 const size_t N_REGS     = 0x08;
 
-const unsigned int SIGNATURE  = 'ASS';
+const unsigned int SIGNATURE  = (unsigned int)'ASS';
 const unsigned int VERSION    = 0;
 const unsigned int PATCHLEVEL = 6;
 
@@ -23,7 +28,7 @@ typedef double arg_t;
 typedef uint16_t cmd_t;
 typedef uint8_t  opcode_t;
 
-const uint16_t MSB = ~((cmd_t)(~0x00) >> 0x01);
+const uint16_t MSB = (uint16_t) ~((cmd_t)(~0x00) >> 0x01);
 
 const cmd_t VAL_T = MSB >> 0x00;
 const cmd_t MEM_T = MSB >> 0x01;

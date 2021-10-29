@@ -115,3 +115,19 @@ ACTION(DED,
         free((void *)0x32);
 })
 
+ACTION(DSP,
+{
+        assert(SCREEN_Y * SCREEN_X <= (RAM_CAP - VRAM_START));
+
+        printf("DISPLAY\n");
+
+        for (int y = 0; y < SCREEN_Y; y++) {
+                for (int x = 0; x < SCREEN_X; x++) {
+                        if (ram[VRAM_START + y * SCREEN_X + x])
+                                printf("%c", '#');
+                        else 
+                                printf("%c", ' ');
+                }
+                printf("%c", '\n');
+        }
+})

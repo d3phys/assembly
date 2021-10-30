@@ -63,6 +63,12 @@ int main(int argc, char *argv[])
         error = compile_code(prep, cfg.output);
         thrw(exit(1), (error), "Compilation failed\n");
 
+        if (!cfg.preprocess) {
+                error = remove(prep);
+                thrw(exit(1), (error), 
+                "Can't remove preprocessed file: %s\n", strerror(errno));
+        }
+
         return 0;
 }
 

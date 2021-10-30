@@ -28,4 +28,6 @@ dep:
 
 ### Dependencies ###
 hash.o: hash.cpp ../include/hash.h
-iomap.o: iomap.cpp ../include/iomap.h ../include/thrw.h
+iomap.o: iomap.cpp ../include/iomap.h ../include/thrw.h \
+ ../include/config.h ../include/assembly.h ../include/commands \
+ ../include/registers

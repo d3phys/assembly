@@ -35,11 +35,11 @@ subdirs:
 
 ### Dependencies ###
 executor.o: executor.cpp ../include/assembly.h ../include/commands \
- ../include/registers executor.h ../include/thrw.h stack.h \
- ../include/config.h ../include/actions ../include/jmp
+ ../include/registers executor.h ../include/thrw.h ../include/config.h \
+ stack.h ../include/actions ../include/jmp
 main.o: main.cpp ../include/iomap.h executor.h ../include/thrw.h \
- ../include/assembly.h ../include/commands ../include/registers stack.h \
- ../include/config.h
+ ../include/config.h ../include/assembly.h ../include/commands \
+ ../include/registers stack.h
 stack.o: stack.cpp ../include/stack.h ../include/config.h \
  ../include/assembly.h ../include/commands ../include/registers log.h \
  ../include/hash.h

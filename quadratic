@@ -13,7 +13,8 @@ main:
         in
         pop cx
 
-        jmp solve_quadratic
+        call solve_quadratic
+        hlt
 ret
 
 solve_quadratic:
@@ -25,7 +26,7 @@ solve_quadratic:
         push 0
         je degenerated
 
-        push bx^2 - 4 * ax * cx
+        push bx * bx - 4 * ax * cx
         pop dx
 
         push dx
@@ -38,10 +39,12 @@ solve_quadratic:
 
         push dx ^ 0.5
         pop dx
+
         push (dx - bx) / (2 * ax)
         show 
-        push 0 - (dx + bx) / (2 * ax)
-        show 
+
+        push  0 - (dx + bx) / (2 * ax)
+        show
 ret
 
 solve_linear:

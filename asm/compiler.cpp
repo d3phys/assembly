@@ -78,6 +78,8 @@ int preprocess_asm(code_t *code, FILE *const out)
                 uncomment(code->cmds[i]);
 
                 code->cmds[i] = skip(code->cmds[i], ' ');
+                if (*code->cmds[i] == '\0')
+                        continue;
 
                 arg = find(code->cmds[i], ' ');
                 if (*arg != '\0')
@@ -86,7 +88,7 @@ int preprocess_asm(code_t *code, FILE *const out)
                 mem = find(arg, '[');
                 if (*mem != '\0') {
                         arg = find(mem, ']');
-                        thrw(segfault, *arg == '\0',
+                        thrw(goto segfault, *arg == '\0',
                              "Can't find close bracket ]. Line: %lu\n", i + 1);
 
                         *arg = '\0';
@@ -94,7 +96,7 @@ int preprocess_asm(code_t *code, FILE *const out)
                 }
 
                 error = reverse_notation(arg, args);
-                thrw(segfault, error == -1, 
+                thrw(goto segfault, error == -1, 
                      "Syntax error: \n");
 
                 if (*args == '\0') {
@@ -256,7 +258,7 @@ static int compile(const code_t *const code, char *const bytecode,
                 ip = find(code->cmds[i], ' ');
 
                 if (*(ip - 1) == ':') {
-                        thrw(error, (lb->count == N_LABELS), 
+                        thrw(goto error, (lb->count == N_LABELS), 
                              "Labels amount overflow\n");
 
                         assert(ip > code->cmds[i]);
@@ -347,14 +349,14 @@ int construct_asm_code(code_t *const asm_code, char *const buf)
         size_t n_cmds = occurs('\n', buf);
 
         token_t  *cmds = (token_t *)calloc(n_cmds, sizeof(token_t));
-        thrw(finally, (cmds == nullptr),
+        thrw(goto finally, (cmds == nullptr),
              "Can't calloc memory for commands: %s", strerror(errno));
 
         n_toks = extract_tokens(buf, cmds, "\n", n_cmds);
         if (n_toks < n_cmds) {
                 n_cmds = n_toks;
                 void *mem = realloc(cmds, sizeof(token_t) * n_cmds);
-                thrw(finally, (mem == nullptr),
+                thrw(goto finally, (mem == nullptr),
                      "Can't realloc memory for commands: %s", 
                                                      strerror(errno));
 

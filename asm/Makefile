@@ -35,10 +35,11 @@ subdirs:
 
 ### Dependencies ###
 compiler.o: compiler.cpp ../include/assembly.h ../include/commands \
- ../include/registers ../include/thrw.h ../include/hash.h parse.h \
- compiler.h
-main.o: main.cpp compiler.h parse.h ../include/assembly.h \
- ../include/commands ../include/registers ../include/thrw.h \
- ../include/iomap.h
-notation.o: notation.cpp ../include/thrw.h parse.h
+ ../include/registers ../include/thrw.h ../include/config.h \
+ ../include/hash.h parse.h compiler.h
+main.o: main.cpp ../include/iomap.h ../include/thrw.h ../include/config.h \
+ ../include/assembly.h ../include/commands ../include/registers \
+ compiler.h parse.h
+notation.o: notation.cpp ../include/thrw.h ../include/config.h \
+ ../include/assembly.h ../include/commands ../include/registers parse.h
 parse.o: parse.cpp parse.h

@@ -3,6 +3,11 @@ ACTION(HLT,
         goto hlt;
 })
 
+ACTION(MEOW,
+{
+        printf("meow\n");
+})
+
 ACTION(PAUS,
 {
         reg[3] = getchar();
@@ -61,6 +66,12 @@ ACTION(SUB,
         push_stack(stack, pop_stack(stack) - reg[2]);
 })
 
+ACTION(POW,
+{
+        reg[2] = pop_stack(stack);
+        push_stack(stack, pow(pop_stack(stack), reg[2]));
+})
+
 ACTION(ADD,
 {
         reg[2] = pop_stack(stack);
@@ -115,19 +126,25 @@ ACTION(DED,
         free((void *)0x32);
 })
 
+ACTION(INT,
+{
+       push_stack(stack, (arg_t)(int64_t)pop_stack(stack));
+})
+
 ACTION(DSP,
 {
-        assert(SCREEN_Y * SCREEN_X <= (RAM_CAP - VRAM_START));
-
         printf("DISPLAY\n");
+        reg[2] = pop_stack(stack);
 
-        for (int y = 0; y < SCREEN_Y; y++) {
-                for (int x = 0; x < SCREEN_X; x++) {
-                        if (ram[VRAM_START + y * SCREEN_X + x])
-                                printf("%c", '#');
+        for (int y = 0; y < reg[2]; y++) {
+                for (int x = 0; x < reg[2]; x++) {
+                        if (ram[VRAM_START + y * (uint64_t)reg[2] + x])
+                                printf("# ");
                         else 
-                                printf("%c", ' ');
+                                printf("  ");
                 }
                 printf("%c", '\n');
         }
 })
+
+

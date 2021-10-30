@@ -3,18 +3,15 @@
 
 #include <stdint.h>
 
-const size_t SCREEN_X = 8;
-const size_t SCREEN_Y = 8;
+const char PREPROC_EXT[] = ".ass";
 
-const double EPSILON = 1e-200;
-
-const size_t VRAM_START = 64;
-const size_t RAM_CAP    = 128;
-const size_t N_REGS     = 0x08;
+const size_t VRAM_START = 256;
+const size_t RAM_CAP    = 2048;
+const size_t N_REGS     = 0x12;
 
 const unsigned int SIGNATURE  = (unsigned int)'ASS';
 const unsigned int VERSION    = 0;
-const unsigned int PATCHLEVEL = 6;
+const unsigned int PATCHLEVEL = 10;
 
 struct header_t {
         unsigned int signature  = SIGNATURE;

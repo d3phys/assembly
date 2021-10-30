@@ -5,6 +5,8 @@
 
 typedef arg_t item_t;
 
+#define THRW_DEBUG
+
 //#define UNPROTECT
 //#define CANARY_PROTECT
 //#define HASH_PROTECT

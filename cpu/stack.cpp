@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+
 #include <stack.h>
 #include "log.h"
 #include <hash.h>

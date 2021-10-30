@@ -75,7 +75,7 @@ int reverse_notation(const char *infix, char *postfix)
                 case '[':
                 case '(':
                         *postfix++ = ' ';
-                        thrw(error, (stk.size >= STK_SIZE), 
+                        thrw(goto error, (stk.size >= STK_SIZE), 
                              "Reverse notation stack is full\n");
 
                         push(&stk, *infix);
@@ -83,7 +83,7 @@ int reverse_notation(const char *infix, char *postfix)
 
                 case ']':
                         while (check(&stk) != '[') {
-                                thrw(error, (stk.size <= 1),
+                                thrw(goto error, (stk.size <= 1),
                                      "Can't find open bracket ]\n");
 
                                 *postfix++ = pop(&stk);
@@ -94,7 +94,7 @@ int reverse_notation(const char *infix, char *postfix)
 
                 case ')':
                         while (check(&stk) != '(') {
-                                thrw(error, (stk.size <= 1),
+                                thrw(goto error, (stk.size <= 1),
                                      "Can't find open bracket (\n");
 
                                 *postfix++ = pop(&stk);
@@ -116,7 +116,7 @@ int reverse_notation(const char *infix, char *postfix)
 
                         *postfix++ = ' ';
 
-                        thrw(error, (stk.size >= STK_SIZE), 
+                        thrw(goto error, (stk.size >= STK_SIZE), 
                              "Reverse notation stack is full\n");
 
                         push(&stk, *infix);

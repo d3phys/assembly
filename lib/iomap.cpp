@@ -39,15 +39,15 @@ int map_out(const char *file, char **const buf, const size_t size)
         int err = 0;
 
         fd = open(file, O_RDWR | O_CREAT, mode); 
-        thrw(finally, (fd == -1), 
+        thrw(goto finally, (fd == -1), 
             "Can't open the file %s: %s\n", file, strerror(errno));
 
         err = ftruncate(fd, size);
-        thrw(finally, (err == -1), 
+        thrw(goto finally, (err == -1), 
             "Can't truncate the file %s: %s\n", file, strerror(errno));
 
         bf = (char *)mmap(nullptr, size, prot, MAP_SHARED, fd, 0);
-        thrw(finally, (buf == MAP_FAILED), 
+        thrw(goto finally, (buf == MAP_FAILED), 
             "Can't map the file %s: %s\n",  file, strerror(errno));
 
         *buf = bf;
@@ -70,17 +70,17 @@ int map_in(const char *file, char **const buf, size_t *size)
         int fd = -1;
         
         off_t fsz = get_size(file);
-        thrw(finally, (fsz == -1), 
-            "Can't get the file size %s\n", strerror(errno));
-        thrw(finally, (fsz == 0), 
+        thrw(goto finally, (fsz == -1), 
+            "Can't get the file size: %s\n", strerror(errno));
+        thrw(goto finally, (fsz == 0), 
             "File is empty: %s\n", file); 
 
         fd = open(file, O_RDWR); 
-        thrw(finally, (fd <= 0), 
+        thrw(goto finally, (fd <= 0), 
             "Can't open the file %s: %s\n", file, strerror(errno));
 
         bf = (char *)mmap(nullptr, fsz + 1, prot, MAP_PRIVATE, fd, 0);
-        thrw(finally, (buf == MAP_FAILED), 
+        thrw(goto finally, (buf == MAP_FAILED), 
             "Can't map the file %s: %s\n",  file, strerror(errno));
 
         bf[fsz] = '\0';

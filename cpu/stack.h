@@ -10,7 +10,8 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <config.h>
+
+#include <assembly.h>
 
 
 #ifdef CANARY_PROTECT

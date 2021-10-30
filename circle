@@ -6,11 +6,14 @@ call main
 hlt
 
 main:
-        push 41 
+        push 31 
         pop fx ; Screen size
 
-        push 0.05 
+        push 0.01 
         pop dx ; Delta angle 
+
+        push 13 
+        pop bx ; Radius
 
         push 256 
         pop cx ; Video Memory start address
@@ -33,9 +36,6 @@ main:
         pop [cx + fx * fx/2 - 1]
         push 1
         pop [cx + fx * fx/2 - fx + 1]
-
-        push 19 
-        pop bx ; Radius
 
         push 0
         pop ax

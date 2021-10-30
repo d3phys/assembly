@@ -1,11 +1,17 @@
 #
-# Main project Makefile. Use it.
-# 
+# Main makefile 
+#
 # Important! Dependencies are done automatically by 'make dep', which also
 # removes any old dependencies. Do not modify it...
 #
+# 2021, d3phys
+#
 
-CXX = g++
+#
+# Awesome flags collection
+# Copyright (C) 2021, 2022 ded32
+#
+
 CXXFLAGS = -D NDEBUG -g -std=c++14 -fmax-errors=100 -Wall -Wextra -Weffc++  \
 	   -Waggressive-loop-optimizations -Wc++0x-compat -Wc++11-compat    \
 	   -Wc++14-compat -Wcast-align -Wcast-qual -Wchar-subscripts        \
@@ -34,6 +40,7 @@ CXXFLAGS = -D NDEBUG -g -std=c++14 -fmax-errors=100 -Wall -Wextra -Weffc++  \
 	   -fsanitize=vla-bound -fsanitize=vptr -lm -pie 	            \
 	   -Wno-format-nonliteral 
 
+CXX = g++
 CPP = $(CXX) -E 
 
 OBJS = 

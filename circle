@@ -1,0 +1,81 @@
+; Circle drawing example
+; d3phys
+; 29.10.2021
+
+call main
+hlt
+
+main:
+        push 41 
+        pop fx ; Screen size
+
+        push 0.05 
+        pop dx ; Delta angle 
+
+        push 256 
+        pop cx ; Video Memory start address
+
+        ; Make it centered
+        push cx + fx*fx/2
+        pop cx
+
+        push cx
+        show
+
+        ; Center and corners
+        push 1
+        pop [cx]
+        push 1
+        pop [cx - fx * fx/2]
+        push 1
+        pop [cx - fx * fx/2 + fx - 1]
+        push 1
+        pop [cx + fx * fx/2 - 1]
+        push 1
+        pop [cx + fx * fx/2 - fx + 1]
+
+        push 19 
+        pop bx ; Radius
+
+        push 0
+        pop ax
+
+        call loop 
+
+        push fx
+        display
+ret
+
+loop:
+        push ax
+        push dx
+        add
+        pop ax
+        push ax
+        push 6.283 
+
+        call fill
+
+        jb loop
+
+        ret 
+
+fill:
+        push ax
+        cos 
+        push bx
+        mul
+        int
+        pop hx
+
+        push ax       
+        sin 
+        push bx
+        mul
+        int
+        pop ix
+
+        push 1
+        pop [cx - ix * fx + hx]
+ret
+

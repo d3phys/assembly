@@ -90,32 +90,31 @@ static int compile_code(const char *const src_name,
         code_t code = {0};
 
         error = map_in(src_name, &src_buf, &size);
-        thrw(goto cup0, (error), "Mapping preprocess input file failed\n");
+        thrw(goto finally, (error), 
+        "Mapping preprocess input file failed\n");
 
         error = construct_asm_code(&code, src_buf);
-        thrw(goto cup1, (error), "Code construction failed\n");
+        thrw(goto finally, (error), "Code construction failed\n");
         
         predict_size = sizeof(header_t) + 
                        code.n_cmds * (sizeof(cmd_t) + sizeof(arg_t));
 
         error = map_out(dst_name, &dst_buf, predict_size);
-        thrw(goto cup2, (error), "Mapping binary file failed\n");
+        thrw(goto finally, (error), "Mapping binary file failed\n");
 
         error = compile_asm(&code, dst_buf, &bytes_written);
-        thrw(goto cup3, (error), "Compilation failed\n");
+        thrw(goto finally, (error), "Compilation failed\n");
         
         error = truncate(dst_name, bytes_written);
-        thrw(goto cup3, (error), 
+        thrw(goto finally, (error), 
         "Can't truncate file: %s\n", strerror(errno));
 
 
-cup3:
-        munmap(dst_buf, predict_size);
-cup2:
-        destruct_asm_code(&code);
-cup1:
-        munmap(src_buf, size);
-cup0:
+finally:
+        if (dst_buf)   { munmap(dst_buf, predict_size); }
+        if (code.cmds) { destruct_asm_code(&code);      }
+        if (src_buf)   { munmap(src_buf, size);         }
+
         return error;
 }
 
@@ -134,26 +133,22 @@ static int preprocess_code(const char *const src_name,
 
         size_t size = 0;
         error = map_in(src_name, &buf, &size);
-        thrw(goto map, (error), "Can't map input file\n");
+        thrw(goto finally, (error), "Can't map input file\n");
 
         error = construct_asm_code(&code, buf);
-        thrw(goto mix, (error), "Code construction failed\n");
+        thrw(goto finally, (error), "Code construction failed\n");
 
         file = fopen(dst_name, "w");
-        thrw(goto mix, (file == nullptr), "Can't open output file\n");
+        thrw(goto finally, (file == nullptr), "Can't open output file\n");
 
-        preprocess_asm(&code, file);
-        thrw(goto mix, (error), "Code preprocessoring failed\n");
+        error = preprocess_asm(&code, file);
+        thrw(goto finally, (error), "Code preprocessoring failed\n");
 
-        error = fclose(file);
-        thrw(goto mix, (error == EOF), "Closing file failed\n");
+finally:
+        if (file)      { fclose(file);             }
+        if (code.cmds) { destruct_asm_code(&code); }
+        if (buf)       { munmap(buf, size);        }
 
-mix:
-        printf("Freee it\n");
-        destruct_asm_code(&code);
-        munmap(buf, size);
-
-map:
         return error;
 }
 

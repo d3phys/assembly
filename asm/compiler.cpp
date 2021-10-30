@@ -96,8 +96,7 @@ int preprocess_asm(code_t *code, FILE *const out)
                 }
 
                 error = reverse_notation(arg, args);
-                thrw(goto segfault, error == -1, 
-                     "Syntax error: \n");
+                thrw(goto segfault, error, "Syntax error at not empty line %lu\n", i + 1);
 
                 if (*args == '\0') {
                         fprintf(out, "%s\n", code->cmds[i]);

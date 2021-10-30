@@ -64,6 +64,8 @@ int reverse_notation(const char *infix, char *postfix)
 
         static stack_t stk = {0};
 
+        int op = 0;
+
         while (*infix != '\0') {
 
                 switch (*infix) {
@@ -108,6 +110,8 @@ int reverse_notation(const char *infix, char *postfix)
                 case '/':
                 case '-':
                 case '+':
+                        thrw(goto error, (op), "Double operations\n");
+
                         while (stk.size > 0 && 
                                priority(*infix) <= priority(check(&stk))) 
                         {
@@ -120,11 +124,13 @@ int reverse_notation(const char *infix, char *postfix)
                              "Reverse notation stack is full\n");
 
                         push(&stk, *infix);
+                        op = 1;
 
                         break;
 
                 default:
                         *postfix++ = *infix;
+                        op = 0;
                         break;
                 }
 

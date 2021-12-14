@@ -65,7 +65,7 @@ asm: subdirs asm/main.o
 	$(CXX) $(CXXFLAGS) -o ass asm/main.o asm/asm.o lib/lib.o
 
 cpu: subdirs cpu/main.o
-	$(CXX) $(CXXFLAGS) -o ded cpu/main.o cpu/cpu.o lib/lib.o
+	$(CXX) $(CXXFLAGS) -o exe cpu/main.o cpu/cpu.o lib/lib.o
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c -I$(INC) $< -o $@

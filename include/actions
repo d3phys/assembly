@@ -147,4 +147,32 @@ ACTION(DSP,
         }
 })
 
+ACTION(EQ,
+{
+        reg[2] = pop_stack(stack);
+        push_stack(stack,(reg[2] == pop_stack(stack)));       
+})
 
+ACTION(AEQ,
+{
+        reg[2] = pop_stack(stack);
+        push_stack(stack,(pop_stack(stack)) >= reg[2]);       
+})
+
+ACTION(BEQ,
+{
+        reg[2] = pop_stack(stack);
+        push_stack(stack,(pop_stack(stack)) <= reg[2]);       
+})
+
+ACTION(BE,
+{
+        reg[2] = pop_stack(stack);
+        push_stack(stack,(pop_stack(stack)) < reg[2]);       
+})
+
+ACTION(AB,
+{
+        reg[2] = pop_stack(stack);
+        push_stack(stack,(pop_stack(stack)) > reg[2]);       
+})

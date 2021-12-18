@@ -153,6 +153,12 @@ ACTION(EQ,
         push_stack(stack,(reg[2] == pop_stack(stack)));       
 })
 
+ACTION(NEQ,
+{
+        reg[2] = pop_stack(stack);
+        push_stack(stack,(reg[2] != pop_stack(stack)));       
+})
+
 ACTION(AEQ,
 {
         reg[2] = pop_stack(stack);

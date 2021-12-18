@@ -176,3 +176,8 @@ ACTION(AB,
         reg[2] = pop_stack(stack);
         push_stack(stack,(pop_stack(stack)) > reg[2]);       
 })
+
+ACTION(NOT,
+{
+        push_stack(stack, !pop_stack(stack));       
+})

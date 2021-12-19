@@ -23,7 +23,7 @@ main:
         pop cx
 
         push cx
-        show
+        out
 
         ; Center and corners
         push 1

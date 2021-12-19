@@ -11,7 +11,7 @@ struct cpu_t {
 
         stack_t stack = {0};
         arg_t registers[N_REGS] = {0};
-        arg_t ram[RAM_CAP]  = {0};
+        arg_t *ram = {0};
 };
 
 

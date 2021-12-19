@@ -90,7 +90,7 @@ ACTION(DIV,
         push_stack(stack, pop_stack(stack) / reg[2]);
 })
 
-ACTION(SHW,
+ACTION(OUT,
 {
         printf("%lg\n", pop_stack(stack));
 })
@@ -129,6 +129,24 @@ ACTION(DED,
 ACTION(INT,
 {
        push_stack(stack, (arg_t)(int64_t)pop_stack(stack));
+})
+
+ACTION(SHW,
+{
+        reg[2] = pop_stack(stack);
+        reg[2] = sqrt(reg[2]);
+
+        reg[3] = pop_stack(stack);
+
+        for (int y = 0; y < reg[2]; y++) {
+                for (int x = 0; x < reg[2]; x++) {
+                        if (ram[(uint64_t)reg[3] + y * (uint64_t)reg[2] + x])
+                                printf("# ");
+                        else 
+                                printf("  ");
+                }
+                printf("%c", '\n');
+        }
 })
 
 ACTION(DSP,

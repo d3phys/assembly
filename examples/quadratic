@@ -41,10 +41,10 @@ solve_quadratic:
         pop dx
 
         push (dx - bx) / (2 * ax)
-        show 
+        out 
 
         push  0 - (dx + bx) / (2 * ax)
-        show
+        out
 ret
 
 solve_linear:
@@ -57,7 +57,7 @@ solve_linear:
         je zero
 
         push 0 - cx / bx
-        show
+        out
         hlt
 
 huge_or_zero:
@@ -69,28 +69,28 @@ huge_or_zero:
 
 zero:
         push 0
-        show 
+        out 
         hlt
 
 zero_discr:
         push 0 - bx / (2 * ax)
-        show
+        out
         hlt
 
 no_solutions:
         push 404
-        show
+        out
         hlt
 
 huge:
         push 1337
-        show
+        out
         hlt
 
 
 degenerated: 
         push 0
-        show 
+        out 
 
         push ax
         push bx

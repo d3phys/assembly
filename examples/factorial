@@ -14,7 +14,7 @@ main:
         call factorial
 
         push dx
-        show
+        out
 ret
 
 factorial:

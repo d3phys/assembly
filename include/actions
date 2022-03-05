@@ -135,13 +135,15 @@ ACTION(SHW,
 {
         reg[2] = pop_stack(stack);
         reg[2] = sqrt(reg[2]);
-
         reg[3] = pop_stack(stack);
 
-        for (int y = 0; y < reg[2]; y++) {
-                for (int x = 0; x < reg[2]; x++) {
+        printf("SIZE: %lg\n", reg[2]);
+        printf("START: %lg\n", reg[3]);
+
+        for (int64_t y = 0; y < (int64_t)reg[2]; y++) {
+                for (int64_t x = 0; x < (int64_t)reg[2]; x++) {
                         if (ram[(uint64_t)reg[3] + y * (uint64_t)reg[2] + x])
-                                printf("# ");
+                                printf("##");
                         else 
                                 printf("  ");
                 }

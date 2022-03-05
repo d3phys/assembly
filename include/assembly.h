@@ -6,7 +6,7 @@
 const char PREPROC_EXT[] = ".ass";
 
 const size_t VRAM_START = 256;
-const size_t RAM_CAP    = 2048;
+const size_t RAM_CAP    = 16384;
 const size_t N_REGS     = 0x12;
 
 const unsigned int SIGNATURE  = (unsigned int)'ASS';
